@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "4c9a74e9-a67a-4d6e-aa53-1371206856b6",
+      "name": "Test User",
+      "email": "test@example.com",
+      "passwordHash": "$2a$10$jF5GuSJO.sPR/Mmm1yj.COv0kDccI7c1eGPV7YQAkhUo1JeKSPQyO",
+      "createdAt": "2026-03-30T22:00:22.073Z"
+    }
+  ],
+  "checkins": [
+    {
+      "id": "36ea0a3f-7ee8-4190-9338-125e7118706e",
+      "userId": "4c9a74e9-a67a-4d6e-aa53-1371206856b6",
+      "mood": "low",
+      "energy": 3,
+      "stress": 8,
+      "notes": "Busy day",
+      "score": 26,
+      "createdAt": "2026-03-30T22:00:32.368Z"
+    }
+  ]
+}
