@@ -140,3 +140,11 @@ vite.config.ts.timestamp-*
 
 server/.env
 client/.env
+
+node_modules
+.env
+*.env
+dist
+client/node_modules
+server/node_modules
+client/dist
