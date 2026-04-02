@@ -16,7 +16,7 @@ export function analyzeCheckin({ mood, energy, stress }) {
   if (mood === 'low' || stress >= 8 || energy <= 3) {
     return {
       feedback: {
-        text: "You seem under pressure today. That's okay — try to slow things down and be kind to yourself.",
+        text: "You seem under pressure today. That's okay, try to slow things down and be kind to yourself.",
         color: '#e05c5c',
         bg: '#fef2f2',
         emoji: '💙',
@@ -39,7 +39,7 @@ export function analyzeCheckin({ mood, energy, stress }) {
         emoji: '🌱',
       },
       suggestions: [
-        { icon: '☕', text: 'Take a five-minute break away from your screen' },
+        { icon: '☕', text: 'Take a five minute break away from your screen' },
         { icon: '💧', text: 'Drink water and reset your posture' },
         { icon: '📚', text: 'Read one short article to support your mood today' },
       ],
