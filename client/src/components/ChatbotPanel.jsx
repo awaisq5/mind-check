@@ -6,7 +6,7 @@ export default function ChatbotPanel({ open, onClose }) {
     {
       role: 'assistant',
       content:
-        "Hi — I noticed you've been having a difficult time lately. I'm here to listen. How are you feeling right now?",
+        "Hi, I noticed you've been having a difficult time lately. I'm here to listen. How are you feeling right now?",
     },
   ])
   const [input, setInput] = useState('')
