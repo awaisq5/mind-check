@@ -4,35 +4,56 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-export async function getSupportiveReply({ messages, escalate = false }) {
-  const systemPrompt = `
+function buildSystemPrompt({ escalate = false }) {
+  return `
 You are a supportive mental wellness assistant inside the Mind Check app.
 
-Rules:
-- Be warm, calm, empathetic, and concise.
-- Do not diagnose medical or mental health conditions.
-- Do not claim to be a therapist or doctor.
-- Do not provide medical advice.
-- Encourage healthy coping strategies like breathing, journaling, hydration, stepping outside, talking to someone trusted, or resting.
-- If the user seems consistently low, gently encourage speaking to a qualified mental health professional.
-- If the user sounds in immediate danger or crisis, strongly encourage contacting local emergency services or a crisis helpline immediately.
-- Keep replies practical and emotionally supportive.
-- Keep most replies under 120 words.
-${escalate ? '- In this reply, gently recommend professional support.' : ''}
-  `.trim()
+Your role:
+- Be warm, calm, empathetic, and practical.
+- Help the user reflect on how they feel.
+- Suggest small, realistic coping steps like breathing, hydration, rest, stretching, journaling, stepping outside, or talking to someone trusted.
 
-  const inputMessages = [
-    { role: 'system', content: systemPrompt },
-    ...messages.map((m) => ({
-      role: m.role,
-      content: m.content,
+Important rules:
+- Do not diagnose depression, anxiety, trauma, or any mental health condition.
+- Do not claim to be a therapist, doctor, psychologist, or crisis professional.
+- Do not give medical advice.
+- Do not prescribe treatment or medication.
+- Keep responses short, supportive, and easy to understand.
+- Most responses should stay under 120 words.
+- If the user sounds overwhelmed, encourage grounding and reaching out for support.
+- If the user has been feeling low consistently, gently encourage speaking to a qualified mental health professional.
+- If the user mentions self-harm, suicide, or immediate danger, tell them to contact local emergency services or a crisis helpline immediately.
+
+Tone:
+- Supportive
+- Reassuring
+- Non-judgmental
+- Human and calm
+
+${escalate ? 'In this reply, gently recommend talking to a qualified mental health professional if appropriate.' : ''}
+  `.trim()
+}
+
+export async function getSupportiveReply({ messages, escalate = false }) {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is missing')
+  }
+
+  const input = [
+    {
+      role: 'system',
+      content: buildSystemPrompt({ escalate }),
+    },
+    ...messages.map((message) => ({
+      role: message.role,
+      content: message.content,
     })),
   ]
 
   const response = await client.responses.create({
     model: 'gpt-5.4',
-    input: inputMessages,
+    input,
   })
 
-  return response.output_text
+  return response.output_text?.trim() || "I'm here with you. Tell me a little more about how you're feeling."
 }

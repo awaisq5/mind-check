@@ -37,8 +37,17 @@ router.post('/', async (req, res) => {
 
     const status = buildSupportStatus(checkins)
 
+    const sanitizedMessages = messages
+      .filter(
+        (message) =>
+          message &&
+          typeof message.role === 'string' &&
+          typeof message.content === 'string'
+      )
+      .slice(-12)
+
     const reply = await getSupportiveReply({
-      messages,
+      messages: sanitizedMessages,
       escalate: status.shouldTriggerChatbot,
     })
 
