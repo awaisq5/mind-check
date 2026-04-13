@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import BottomNav from '../components/BottomNav'
-import NearbySupport from '../components/NearbySupport'
+import FindSupport from "../components/FindSupport";
 
 const OPTIONS = [
   {
@@ -74,7 +74,7 @@ export default function SupportOptions() {
           ))}
         </div>
 
-        <NearbySupport />
+        <FindSupport />
 
         <div
           className="card"
