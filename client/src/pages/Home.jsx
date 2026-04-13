@@ -24,7 +24,9 @@ export default function Home() {
           setShowChatPrompt(true)
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        // keep silent so home screen still works even if chat status fails
+      })
 
     return () => {
       active = false
@@ -56,10 +58,12 @@ export default function Home() {
             <p style={{ marginBottom: 12 }}>
               Want to talk for a moment with the support assistant?
             </p>
+
             <div style={{ display: 'flex', gap: 10 }}>
               <button className="btn btn-primary" onClick={() => setShowChat(true)}>
                 Open chat
               </button>
+
               <button className="btn btn-ghost" onClick={() => setShowChatPrompt(false)}>
                 Later
               </button>
@@ -69,18 +73,28 @@ export default function Home() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
           <button className="btn btn-primary" onClick={() => navigate('/checkin')}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
             Start Check-In
           </button>
+
           <button className="btn btn-secondary" onClick={() => navigate('/progress')}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
             View Progress
           </button>
         </div>
 
         <div className="card" style={{ background: 'var(--color-primary-light)', border: 'none', marginBottom: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <p style={{ fontWeight: 600, color: 'var(--color-primary)', fontSize: 14 }}>This week's mood</p>
+            <p style={{ fontWeight: 600, color: 'var(--color-primary)', fontSize: 14 }}>This week&apos;s mood</p>
             <span style={{ fontSize: 12, color: 'var(--color-primary)' }}>5 check-ins</span>
           </div>
+
           <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 40 }}>
             {[60, 75, 55, 85, 70].map((h, i) => (
               <div
@@ -95,6 +109,7 @@ export default function Home() {
               />
             ))}
           </div>
+
           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
             {['M', 'T', 'W', 'T', 'F'].map((d, i) => (
               <span

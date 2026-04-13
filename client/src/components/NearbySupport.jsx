@@ -17,6 +17,7 @@ export default function NearbySupport() {
       <p style={{ fontWeight: 600, marginBottom: 8, color: 'var(--color-text)' }}>
         Find nearby support
       </p>
+
       <p style={{ marginBottom: 12 }}>
         Enter your ZIP code to search for therapists or mental health specialists near you.
       </p>

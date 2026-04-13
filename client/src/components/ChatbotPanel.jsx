@@ -5,7 +5,8 @@ export default function ChatbotPanel({ open, onClose }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Hi, I noticed you've been having a difficult time lately. I'm here to listen. How are you feeling right now?",
+      content:
+        "Hi — I noticed you've been having a difficult time lately. I'm here to listen. How are you feeling right now?",
     },
   ])
   const [input, setInput] = useState('')
@@ -32,7 +33,10 @@ export default function ChatbotPanel({ open, onClose }) {
 
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: data.reply || 'I am here with you.' },
+        {
+          role: 'assistant',
+          content: data.reply || 'I am here with you.',
+        },
       ])
     } catch (err) {
       setError(err.message || 'Something went wrong.')
@@ -76,15 +80,31 @@ export default function ChatbotPanel({ open, onClose }) {
           }}
         >
           <div>
-            <p style={{ fontWeight: 700, color: 'var(--color-text)' }}>Mind Check Support</p>
+            <p style={{ fontWeight: 700, color: 'var(--color-text)' }}>
+              Mind Check Support
+            </p>
             <p style={{ fontSize: 12 }}>Supportive AI chat</p>
           </div>
-          <button className="btn btn-ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={onClose}>
+
+          <button
+            className="btn btn-ghost"
+            style={{ width: 'auto', padding: '8px 12px' }}
+            onClick={onClose}
+          >
             Close
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: 16,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 10,
+          }}
+        >
           {messages.map((msg, i) => (
             <div
               key={i}
@@ -93,7 +113,10 @@ export default function ChatbotPanel({ open, onClose }) {
                 maxWidth: '82%',
                 padding: '12px 14px',
                 borderRadius: 16,
-                background: msg.role === 'user' ? 'var(--color-primary)' : 'var(--color-primary-light)',
+                background:
+                  msg.role === 'user'
+                    ? 'var(--color-primary)'
+                    : 'var(--color-primary-light)',
                 color: msg.role === 'user' ? '#fff' : 'var(--color-text)',
               }}
             >
@@ -116,10 +139,16 @@ export default function ChatbotPanel({ open, onClose }) {
                 if (e.key === 'Enter') handleSend()
               }}
             />
-            <button className="btn btn-primary" style={{ width: 'auto', padding: '0 18px' }} onClick={handleSend}>
+
+            <button
+              className="btn btn-primary"
+              style={{ width: 'auto', padding: '0 18px' }}
+              onClick={handleSend}
+            >
               Send
             </button>
           </div>
+
           <p style={{ fontSize: 12, marginTop: 8 }}>
             This chat is supportive only and not a substitute for professional care.
           </p>

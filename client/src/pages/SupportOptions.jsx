@@ -34,13 +34,15 @@ export default function SupportOptions() {
             onClick={() => navigate(-1)}
             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, borderRadius: 8 }}
           >
-            ←
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-text)" strokeWidth="2.5">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
           </button>
           <h2>Support Options</h2>
         </div>
 
         <p style={{ marginBottom: 20, lineHeight: 1.7 }}>
-          You’re not alone. Here are some ways to get support when you need it most.
+          You&apos;re not alone. Here are some ways to get support when you need it most.
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -61,6 +63,7 @@ export default function SupportOptions() {
               >
                 {opt.emoji}
               </div>
+
               <div style={{ flex: 1 }}>
                 <p style={{ fontWeight: 600, fontSize: 15, color: 'var(--color-text)', marginBottom: 5 }}>
                   {opt.title}
@@ -73,7 +76,15 @@ export default function SupportOptions() {
 
         <NearbySupport />
 
-        <div className="card" style={{ marginTop: 20, background: '#fef2f2', border: '1px solid #fca5a530', textAlign: 'center' }}>
+        <div
+          className="card"
+          style={{
+            marginTop: 20,
+            background: '#fef2f2',
+            border: '1px solid #fca5a530',
+            textAlign: 'center',
+          }}
+        >
           <p style={{ fontSize: 14, color: 'var(--color-text)', fontWeight: 600, marginBottom: 6 }}>
             🆘 In an emergency?
           </p>
@@ -82,6 +93,7 @@ export default function SupportOptions() {
           </p>
         </div>
       </div>
+
       <BottomNav />
     </>
   )
