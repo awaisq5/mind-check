@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import BottomNav from '../components/BottomNav'
-import FindSupport from "../components/FindSupport";
+import FindSupport from '../components/FindSupport'
 
 const OPTIONS = [
   {
