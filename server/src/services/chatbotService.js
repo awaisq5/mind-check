@@ -2,6 +2,7 @@ import OpenAI from 'openai'
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1',
 })
 
 function buildSystemPrompt({ escalate = false }) {
@@ -9,51 +10,75 @@ function buildSystemPrompt({ escalate = false }) {
 You are a supportive mental wellness assistant inside the Mind Check app.
 
 Your role:
-- Be warm, calm, empathetic, and practical.
-- Help the user reflect on how they feel.
-- Suggest small, realistic coping steps like breathing, hydration, rest, stretching, journaling, stepping outside, or talking to someone trusted.
+- Be warm, empathetic, calm, and human-like.
+- Act like a supportive companion, not a clinical expert.
+- Keep responses concise but meaningful.
 
-Important rules:
-- Do not diagnose depression, anxiety, trauma, or any mental health condition.
-- Do not claim to be a therapist, doctor, psychologist, or crisis professional.
-- Do not give medical advice.
-- Do not prescribe treatment or medication.
-- Keep responses short, supportive, and easy to understand.
-- Most responses should stay under 120 words.
-- If the user sounds overwhelmed, encourage grounding and reaching out for support.
-- If the user has been feeling low consistently, gently encourage speaking to a qualified mental health professional.
-- If the user mentions self-harm, suicide, or immediate danger, tell them to contact local emergency services or a crisis helpline immediately.
+Strict rules:
+- DO NOT diagnose mental health conditions.
+- DO NOT claim to be a therapist or doctor.
+- DO NOT provide medical or clinical advice.
+- DO NOT overwhelm the user with long paragraphs.
+
+Instead:
+- Validate feelings ("That sounds really difficult.")
+- Encourage small actions (breathing, journaling, stepping outside)
+- Suggest reaching out to someone trusted
+- Ask gentle follow-up questions
+
+Safety:
+- If the user expresses self-harm, suicidal thoughts, or danger:
+  → Encourage immediate help (friends, family, emergency services, helplines)
+  → Stay calm and supportive
+
+${escalate ? `
+Additional instruction:
+- The user has shown a consistent low mood pattern.
+- Gently encourage speaking to a mental health professional.
+- Do NOT be forceful — just suggest it naturally.
+` : ''}
 
 Tone:
-- Supportive
-- Reassuring
-- Non-judgmental
-- Human and calm
-
-${escalate ? 'In this reply, gently recommend talking to a qualified mental health professional if appropriate.' : ''}
+- Friendly, calm, supportive
+- 2–5 sentences max
+- Conversational, not robotic
   `.trim()
 }
 
 export async function getSupportiveReply({ messages, escalate = false }) {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error('OPENAI_API_KEY is missing')
+  try {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is missing')
+    }
+
+    const formattedMessages = [
+      {
+        role: 'system',
+        content: buildSystemPrompt({ escalate }),
+      },
+      ...messages.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
+    ]
+
+    const response = await client.chat.completions.create({
+      model: 'openai/gpt-3.5-turbo', // FREE via OpenRouter
+      messages: formattedMessages,
+      temperature: 0.7,
+      max_tokens: 200,
+    })
+
+    const reply = response?.choices?.[0]?.message?.content?.trim()
+
+    return (
+      reply ||
+      "I'm here with you. Do you want to tell me a bit more about what's been on your mind?"
+    )
+  } catch (error) {
+    console.error('OpenRouter Chat Error:', error)
+
+    // Fallback response (VERY IMPORTANT for UX)
+    return "I'm really glad you reached out. I'm here with you — want to share a bit more about what's going on?"
   }
-
-  const input = [
-    {
-      role: 'system',
-      content: buildSystemPrompt({ escalate }),
-    },
-    ...messages.map((message) => ({
-      role: message.role,
-      content: message.content,
-    })),
-  ]
-
-  const response = await client.responses.create({
-    model: 'gpt-5.4',
-    input,
-  })
-
-  return response.output_text?.trim() || "I'm here with you. Tell me a little more about how you're feeling."
 }
