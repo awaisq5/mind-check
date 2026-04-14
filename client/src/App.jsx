@@ -10,6 +10,7 @@ import SupportAlert from './pages/SupportAlert'
 import SupportOptions from './pages/SupportOptions'
 import StatusBar from './components/StatusBar'
 import { isAuthenticated } from './auth'
+import ArticleDetail from './pages/ArticleDetail'
 
 function RequireAuth() {
   return isAuthenticated() ? <Outlet /> : <Navigate to="/login" replace />
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/progress" element={<Progress />} />
             <Route path="/support-alert" element={<SupportAlert />} />
             <Route path="/support" element={<SupportOptions />} />
+            <Route path="/articles/:id" element={<ArticleDetail />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
