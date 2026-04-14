@@ -8,6 +8,7 @@ export const ARTICLES = [
     title: '5 Breathing Techniques to Calm Anxiety',
     category: 'Stress',
     readTime: 4,
+    sourceUrl: 'https://www.healthline.com/health/breathing-exercises-for-anxiety',
     content: `
 Breathing techniques can help calm your mind and body during stressful moments.
 
@@ -34,6 +35,7 @@ These exercises can help lower tension and bring your attention back to the pres
     title: 'Why Sleep Is the Foundation of Mental Health',
     category: 'Sleep',
     readTime: 6,
+    sourceUrl: 'https://www.sleepfoundation.org/mental-health',
     content: `
 Sleep plays a major role in emotional balance, focus, and stress recovery.
 
@@ -58,6 +60,7 @@ Good sleep supports both mental and physical wellbeing.
     title: 'How to Build a Healthy Daily Routine',
     category: 'Habits',
     readTime: 5,
+    sourceUrl: 'https://www.verywellmind.com/how-to-build-a-routine-for-mental-health-5207995',
     content: `
 A healthy routine creates structure and reduces mental overload.
 
@@ -78,6 +81,7 @@ A simple and repeatable structure is often more helpful than an ideal one.
     title: 'Understanding Your Emotions Better',
     category: 'Mindfulness',
     readTime: 3,
+    sourceUrl: 'https://www.mindful.org/how-to-identify-and-understand-your-emotions/',
     content: `
 Understanding your emotions starts with noticing them without judgment.
 

@@ -7,15 +7,16 @@ import { apiFetch } from '../lib/api'
 
 const ARTICLES = [
   {
+    id: 'breathing-techniques',
     title: '5 Breathing Techniques to Calm Anxiety',
     category: 'Stress',
     readTime: 4,
   },
   {
+    id: 'sleep-foundation',
     title: 'Why Sleep Is the Foundation of Mental Health',
     category: 'Sleep',
     readTime: 6,
-    index: 2,
   },
 ]
 
@@ -33,9 +34,7 @@ export default function Home() {
           setShowChatPrompt(true)
         }
       })
-      .catch(() => {
-        // keep silent so home screen still works even if chat status fails
-      })
+      .catch(() => {})
 
     return () => {
       active = false
@@ -274,7 +273,14 @@ export default function Home() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {ARTICLES.map((a, i) => (
-            <ArticleCard key={i} {...a} index={i} to="/articles" />
+            <ArticleCard
+              key={a.id}
+              id={a.id}
+              title={a.title}
+              category={a.category}
+              readTime={a.readTime}
+              index={i}
+            />
           ))}
         </div>
       </div>
