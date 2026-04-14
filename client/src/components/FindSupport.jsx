@@ -5,7 +5,7 @@ export default function FindSupport() {
     street: '',
     city: '',
     zip: '',
-    country: 'Your Country',
+    country: '',
   })
 
   const handleChange = (e) => {
