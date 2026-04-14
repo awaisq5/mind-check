@@ -15,10 +15,15 @@ export default function ArticleCard({
   const bg = ARTICLE_COLORS[index % ARTICLE_COLORS.length]
   const text = ARTICLE_TEXT[index % ARTICLE_TEXT.length]
 
+  const handleClick = () => {
+    if (!id) return
+    navigate(`/articles/${id}`)
+  }
+
   return (
     <div
       className="card"
-      onClick={() => navigate(`/articles/${id}`)}
+      onClick={handleClick}
       style={{
         display: 'flex',
         gap: 14,
@@ -42,14 +47,14 @@ export default function ArticleCard({
         {index % 4 === 0 ? '🧠' : index % 4 === 1 ? '🌿' : index % 4 === 2 ? '💤' : '✨'}
       </div>
 
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
         <p
           style={{
             fontSize: 14,
             fontWeight: 600,
             color: 'var(--color-text)',
+            lineHeight: 1.4,
             marginBottom: 4,
-            lineHeight: 1.5,
           }}
         >
           {title}
@@ -74,6 +79,17 @@ export default function ArticleCard({
           </span>
         </div>
       </div>
+
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="var(--color-text-muted)"
+        strokeWidth="2"
+      >
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
     </div>
   )
 }
