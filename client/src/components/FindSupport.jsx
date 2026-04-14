@@ -5,7 +5,7 @@ export default function FindSupport() {
     street: '',
     city: '',
     zip: '',
-    country: 'Germany',
+    country: 'Your Country',
   })
 
   const handleChange = (e) => {
@@ -58,7 +58,7 @@ export default function FindSupport() {
           <input
             type="text"
             name="street"
-            placeholder="e.g. Fuhrberger Straße 81"
+            placeholder="Your Address"
             value={form.street}
             onChange={handleChange}
           />
@@ -69,7 +69,7 @@ export default function FindSupport() {
           <input
             type="text"
             name="city"
-            placeholder="e.g. Celle"
+            placeholder="Your City"
             value={form.city}
             onChange={handleChange}
           />
@@ -80,7 +80,7 @@ export default function FindSupport() {
           <input
             type="text"
             name="zip"
-            placeholder="e.g. 29225"
+            placeholder="Your ZIP Code"
             value={form.zip}
             onChange={handleChange}
           />
@@ -91,7 +91,7 @@ export default function FindSupport() {
           <input
             type="text"
             name="country"
-            placeholder="e.g. Germany"
+            placeholder="Your Country"
             value={form.country}
             onChange={handleChange}
           />

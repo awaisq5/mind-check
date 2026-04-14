@@ -47,7 +47,7 @@ export default function Login() {
         {mode === 'register' && (
           <div className="input-group">
             <label className="input-label">Full name</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Awais" />
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
           </div>
         )}
 
