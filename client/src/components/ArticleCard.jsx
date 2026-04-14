@@ -4,19 +4,13 @@ const ARTICLE_COLORS = ['#e8f4fd', '#fef3e8', '#edf7f3', '#f3f0fd']
 const ARTICLE_TEXT = ['#2980b9', '#e67e22', '#27ae60', '#7f5af0']
 
 export default function ArticleCard({
+  id,
   title,
   category,
   readTime,
   index = 0,
-  to,
 }) {
   const navigate = useNavigate()
-
-  const handleClick = () => {
-    if (to) {
-      navigate(to)
-    }
-  }
 
   const bg = ARTICLE_COLORS[index % ARTICLE_COLORS.length]
   const text = ARTICLE_TEXT[index % ARTICLE_TEXT.length]
@@ -24,12 +18,12 @@ export default function ArticleCard({
   return (
     <div
       className="card"
-      onClick={handleClick}
+      onClick={() => navigate(`/articles/${id}`)}
       style={{
         display: 'flex',
         gap: 14,
         alignItems: 'center',
-        cursor: to ? 'pointer' : 'default',
+        cursor: 'pointer',
       }}
     >
       <div
@@ -55,12 +49,13 @@ export default function ArticleCard({
             fontWeight: 600,
             color: 'var(--color-text)',
             marginBottom: 4,
+            lineHeight: 1.5,
           }}
         >
           {title}
         </p>
 
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <span
             style={{
               fontSize: 11,

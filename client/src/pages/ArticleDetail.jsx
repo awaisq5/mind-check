@@ -1,43 +1,119 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import BottomNav from '../components/BottomNav'
-
-const CONTENT = {
-  breathing: {
-    title: '5 Breathing Techniques to Calm Anxiety',
-    body: 'Try slow breathing, box breathing, and mindful pauses. Focus on your inhale and exhale to calm your nervous system.',
-  },
-  sleep: {
-    title: 'Why Sleep Is the Foundation of Mental Health',
-    body: 'Sleep affects mood, focus, and emotional balance. Aim for consistent sleep patterns and reduce screen time before bed.',
-  },
-}
+import { ARTICLES } from './Articles'
 
 export default function ArticleDetail() {
-  const { id } = useParams()
   const navigate = useNavigate()
+  const { id } = useParams()
 
-  const article = CONTENT[id]
+  const article = useMemo(() => {
+    return ARTICLES.find((item) => item.id === id)
+  }, [id])
 
   if (!article) {
     return (
-      <div className="screen">
-        <h2>Article not found</h2>
-      </div>
+      <>
+        <div className="screen">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 0 20px' }}>
+            <button
+              onClick={() => navigate('/articles')}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 4,
+                borderRadius: 8,
+              }}
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--color-text)"
+                strokeWidth="2.5"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <h2>Article Not Found</h2>
+          </div>
+
+          <p style={{ lineHeight: 1.7 }}>
+            The article you are looking for could not be found.
+          </p>
+        </div>
+
+        <BottomNav />
+      </>
     )
   }
 
   return (
     <>
       <div className="screen">
-        <button onClick={() => navigate(-1)} className="btn btn-ghost">
-          Back
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 0 20px' }}>
+          <button
+            onClick={() => navigate('/articles')}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 4,
+              borderRadius: 8,
+            }}
+          >
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--color-text)"
+              strokeWidth="2.5"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <h2>Article</h2>
+        </div>
 
-        <h2 style={{ marginTop: 16 }}>{article.title}</h2>
+        <div className="card">
+          <p
+            style={{
+              fontSize: 22,
+              fontWeight: 700,
+              color: 'var(--color-text)',
+              marginBottom: 12,
+              lineHeight: 1.4,
+            }}
+          >
+            {article.title}
+          </p>
 
-        <p style={{ marginTop: 12, lineHeight: 1.7 }}>
-          {article.body}
-        </p>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 18 }}>
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: 'var(--color-primary)',
+                background: 'var(--color-primary-light)',
+                padding: '4px 10px',
+                borderRadius: 20,
+              }}
+            >
+              {article.category}
+            </span>
+
+            <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>
+              {article.readTime} min read
+            </span>
+          </div>
+
+          <div style={{ whiteSpace: 'pre-line' }}>
+            <p style={{ lineHeight: 1.9 }}>{article.content}</p>
+          </div>
+        </div>
       </div>
 
       <BottomNav />
