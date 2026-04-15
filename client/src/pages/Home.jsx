@@ -61,12 +61,12 @@ export default function Home() {
             gap: 16,
           }}
         >
-          <div>
-            <p style={{ fontSize: 15, color: 'var(--color-text-secondary)', marginBottom: 4 }}>
-              Hi, Awais 👋
-            </p>
-            <h1>How are you feeling today?</h1>
-          </div>
+        <div>
+          <p style={{ fontSize: 15, color: 'var(--color-text-secondary)', marginBottom: 4 }}>Hi, {user?.name || 'there'} 👋</p>
+          <h1 style={{ fontSize: 22, fontWeight: 700 }}>
+          How are you feeling today?
+          </h1>
+        </div>
 
           <button
             className="btn btn-ghost"
