@@ -9,32 +9,33 @@ const checkInSchema = new mongoose.Schema(
     },
     mood: {
       type: String,
-      enum: ['good', 'okay', 'low'],
       required: true,
+      enum: ['great', 'good', 'okay', 'low'],
     },
     energy: {
       type: Number,
+      required: true,
       min: 1,
       max: 10,
-      required: true,
     },
     stress: {
       type: Number,
+      required: true,
       min: 1,
       max: 10,
-      required: true,
     },
     notes: {
       type: String,
       default: '',
       trim: true,
-    },
-    score: {
-      type: Number,
-      required: true,
+      maxlength: 500,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 )
 
-export default mongoose.model('CheckIn', checkInSchema)
+const CheckIn = mongoose.model('CheckIn', checkInSchema)
+
+export default CheckIn

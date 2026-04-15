@@ -1,10 +1,33 @@
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BottomNav from '../components/BottomNav'
+import { apiFetch } from '../lib/api'
+import {
+  averageScore,
+  buildInsight,
+  buildSVGPoints,
+  buildSummaryStats,
+  buildTrendData,
+} from '../lib/checkinInsights'
 
 export default function Progress() {
   const navigate = useNavigate()
+  const [checkins, setCheckins] = useState([])
 
-  const weeklyData = [55, 68, 72, 60, 82, 74, 88]
+  useEffect(() => {
+    apiFetch('/checkins')
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCheckins(data)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const trendData = useMemo(() => buildTrendData(checkins), [checkins])
+  const points = useMemo(() => buildSVGPoints(trendData, 320, 140), [trendData])
+  const stats = useMemo(() => buildSummaryStats(checkins), [checkins])
+  const insight = useMemo(() => buildInsight(checkins), [checkins])
 
   return (
     <>
@@ -42,70 +65,110 @@ export default function Progress() {
           </button>
           <div>
             <h2>Progress</h2>
-            <p style={{ marginTop: 2 }}>A quick look at your recent wellbeing.</p>
+            <p style={{ marginTop: 2 }}>A clearer view of your recent mood pattern.</p>
           </div>
         </div>
 
-        <div
-          className="card hero-card"
-          style={{ marginBottom: 18 }}
-        >
-          <div className="row-between" style={{ marginBottom: 14 }}>
-            <p style={{ fontWeight: 700, color: '#fff' }}>Weekly Mood Trend</p>
-            <span className="score-pill" style={{ color: '#fff' }}>+12%</span>
+        <div className="card" style={{ marginBottom: 18, padding: 18 }}>
+          <div className="row-between" style={{ marginBottom: 12 }}>
+            <p className="summary-title">Mood Trend</p>
+            <span className="score-pill">{averageScore(checkins) || '0.0'}/10</span>
           </div>
 
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', height: 110 }}>
-            {weeklyData.map((value, index) => (
-              <div
-                key={index}
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  gap: 8,
-                }}
-              >
-                <div
-                  style={{
-                    width: '100%',
-                    height: `${value}%`,
-                    background: index === weeklyData.length - 1 ? '#ffffff' : 'rgba(255,255,255,0.72)',
-                    borderRadius: '12px 12px 0 0',
-                  }}
-                />
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.95)', fontWeight: 700 }}>
-                  {['M', 'T', 'W', 'T', 'F', 'S', 'S'][index]}
-                </span>
+          {trendData.length > 0 ? (
+            <>
+              <div className="trend-chart-wrap">
+                <svg viewBox="0 0 320 140" className="trend-chart-svg">
+                  {[20, 50, 80, 110].map((y) => (
+                    <line
+                      key={y}
+                      x1="0"
+                      y1={y}
+                      x2="320"
+                      y2={y}
+                      stroke="rgba(15,23,42,0.06)"
+                      strokeWidth="1"
+                    />
+                  ))}
+
+                  <polyline
+                    fill="none"
+                    stroke="var(--color-primary)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    points={points}
+                  />
+
+                  {trendData.map((item, index) => {
+                    const x =
+                      trendData.length === 1
+                        ? 160
+                        : 12 + ((320 - 24) * index) / (trendData.length - 1)
+
+                    const y = 14 + (140 - 28) - ((item.score / 10) * (140 - 28))
+
+                    return (
+                      <g key={item._id || index}>
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r="5"
+                          fill="#ffffff"
+                          stroke="var(--color-primary)"
+                          strokeWidth="3"
+                        />
+                      </g>
+                    )
+                  })}
+                </svg>
               </div>
-            ))}
+
+              <div className="trend-label-row">
+                {trendData.map((item, index) => (
+                  <div key={item._id || index} className="trend-label-item">
+                    <span className="trend-label-day">{item.shortDay}</span>
+                    <span className="trend-label-date">{item.shortDate}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p>No trend data yet. Complete a few check-ins to see your graph.</p>
+          )}
+        </div>
+
+        <div className="result-metrics-row" style={{ marginBottom: 18 }}>
+          <div className="result-metric-card">
+            <p className="result-metric-label">Avg Score</p>
+            <p className="result-metric-value">{stats.averageMoodScore}</p>
+          </div>
+
+          <div className="result-metric-card">
+            <p className="result-metric-label">Energy</p>
+            <p className="result-metric-value">{stats.latestEnergy}</p>
+          </div>
+
+          <div className="result-metric-card">
+            <p className="result-metric-label">Stress</p>
+            <p className="result-metric-value">{stats.latestStress}</p>
           </div>
         </div>
 
         <div className="card" style={{ marginBottom: 14 }}>
           <div className="row-between" style={{ marginBottom: 8 }}>
-            <p className="summary-title">Average Mood Score</p>
-            <span className="score-pill">7.8/10</span>
+            <p className="summary-title">Check-ins Logged</p>
+            <span className="tiny-muted">{stats.totalCheckins}</span>
           </div>
-          <p>You’ve shown a steadier mood pattern this week compared to the last one.</p>
-        </div>
-
-        <div className="card" style={{ marginBottom: 14 }}>
-          <div className="row-between" style={{ marginBottom: 8 }}>
-            <p className="summary-title">Best Day</p>
-            <span className="tiny-muted">Friday</span>
-          </div>
-          <p>Your highest mood was recorded on Friday, possibly after more rest and recovery.</p>
+          <p>You are building a stronger picture of your wellbeing over time.</p>
         </div>
 
         <div className="card">
           <div className="row-between" style={{ marginBottom: 8 }}>
             <p className="summary-title">Insight</p>
-            <span className="tiny-muted">Pattern</span>
+            <span className="tiny-muted">Live pattern</span>
           </div>
-          <p>You tend to feel better on days when you complete a check-in earlier.</p>
+          <p>{insight}</p>
         </div>
       </div>
 

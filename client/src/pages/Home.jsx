@@ -4,6 +4,11 @@ import BottomNav from '../components/BottomNav'
 import ArticleCard from '../components/ArticleCard'
 import ChatbotPanel from '../components/ChatbotPanel'
 import { apiFetch } from '../lib/api'
+import {
+  buildInsight,
+  buildTrendData,
+  buildSummaryStats,
+} from '../lib/checkinInsights'
 
 const HOME_ARTICLES = [
   {
@@ -24,6 +29,7 @@ export default function Home() {
   const navigate = useNavigate()
   const [showChatPrompt, setShowChatPrompt] = useState(false)
   const [showChat, setShowChat] = useState(false)
+  const [checkins, setCheckins] = useState([])
 
   const user = useMemo(() => {
     try {
@@ -37,13 +43,22 @@ export default function Home() {
   useEffect(() => {
     let active = true
 
-    apiFetch('/chat/status')
-      .then((data) => {
-        if (active && data.shouldTriggerChatbot) {
+    Promise.allSettled([apiFetch('/chat/status'), apiFetch('/checkins')]).then(
+      ([chatResult, checkinResult]) => {
+        if (!active) return
+
+        if (
+          chatResult.status === 'fulfilled' &&
+          chatResult.value?.shouldTriggerChatbot
+        ) {
           setShowChatPrompt(true)
         }
-      })
-      .catch(() => {})
+
+        if (checkinResult.status === 'fulfilled' && Array.isArray(checkinResult.value)) {
+          setCheckins(checkinResult.value)
+        }
+      }
+    )
 
     return () => {
       active = false
@@ -56,6 +71,10 @@ export default function Home() {
     localStorage.removeItem('user')
     navigate('/login')
   }
+
+  const trendData = buildTrendData(checkins)
+  const stats = buildSummaryStats(checkins)
+  const insight = buildInsight(checkins)
 
   return (
     <>
@@ -150,7 +169,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="card hero-card" style={{ marginBottom: 22 }}>
+        <div className="card hero-card" style={{ marginBottom: 18 }}>
           <div
             style={{
               display: 'flex',
@@ -160,17 +179,19 @@ export default function Home() {
             }}
           >
             <p style={{ fontWeight: 700, fontSize: 15 }}>This week&apos;s mood</p>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>5 check-ins</span>
+            <span style={{ fontSize: 13, fontWeight: 600 }}>
+              {stats.totalCheckins} check-ins
+            </span>
           </div>
 
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', height: 54 }}>
-            {[60, 75, 55, 85, 70].map((h, i) => (
+            {(trendData.length ? trendData : [{ score: 4 }, { score: 5 }, { score: 4 }, { score: 6 }, { score: 5 }]).map((item, i, arr) => (
               <div
                 key={i}
                 style={{
                   flex: 1,
-                  height: `${h}%`,
-                  background: i === 4 ? '#ffffff' : 'rgba(255,255,255,0.68)',
+                  height: `${Math.max(26, item.score * 10)}%`,
+                  background: i === arr.length - 1 ? '#ffffff' : 'rgba(255,255,255,0.68)',
                   borderRadius: '8px 8px 0 0',
                 }}
               />
@@ -178,7 +199,7 @@ export default function Home() {
           </div>
 
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-            {['M', 'T', 'W', 'T', 'F'].map((d, i) => (
+            {(trendData.length ? trendData : ['M', 'T', 'W', 'T', 'F'].map((d) => ({ shortDay: d }))).map((item, i) => (
               <span
                 key={i}
                 style={{
@@ -186,13 +207,21 @@ export default function Home() {
                   textAlign: 'center',
                   fontSize: 11,
                   color: 'rgba(255,255,255,0.95)',
-                  fontWeight: i === 4 ? 800 : 600,
+                  fontWeight: i === (trendData.length || 5) - 1 ? 800 : 600,
                 }}
               >
-                {d}
+                {item.shortDay}
               </span>
             ))}
           </div>
+        </div>
+
+        <div className="card" style={{ marginBottom: 22 }}>
+          <div className="row-between" style={{ marginBottom: 8 }}>
+            <p className="summary-title">Quick insight</p>
+            <span className="tiny-muted">Live data</span>
+          </div>
+          <p>{insight}</p>
         </div>
 
         <div className="soft-section" style={{ marginBottom: 22 }}>

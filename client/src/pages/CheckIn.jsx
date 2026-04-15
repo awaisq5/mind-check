@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BottomNav from '../components/BottomNav'
+import { apiFetch } from '../lib/api'
 
 export default function CheckIn() {
   const navigate = useNavigate()
@@ -8,18 +9,41 @@ export default function CheckIn() {
   const [energy, setEnergy] = useState(5)
   const [stress, setStress] = useState(5)
   const [notes, setNotes] = useState('')
+  const [saving, setSaving] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    navigate('/results', {
-      state: {
-        mood,
+    if (!mood) {
+      alert('Please select your mood.')
+      return
+    }
+
+    try {
+      setSaving(true)
+
+      const payload = {
+        mood: mood.toLowerCase(),
         energy,
         stress,
         notes,
-      },
-    })
+      }
+
+      const savedCheckin = await apiFetch('/checkins', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      })
+
+      navigate('/results', {
+        state: {
+          savedCheckin,
+        },
+      })
+    } catch (error) {
+      alert(error.message || 'Failed to save check-in.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -124,8 +148,8 @@ export default function CheckIn() {
             </div>
           </div>
 
-          <button className="btn btn-primary" type="submit">
-            Save Check-In
+          <button className="btn btn-primary" type="submit" disabled={saving}>
+            {saving ? 'Saving...' : 'Save Check-In'}
           </button>
         </form>
       </div>

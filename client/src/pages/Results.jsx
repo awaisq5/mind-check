@@ -1,31 +1,17 @@
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ArticleCard from '../components/ArticleCard'
-
-function getMoodScore(mood, energy, stress) {
-  const normalizedMood = (mood || '').toLowerCase()
-
-  const moodBase =
-    normalizedMood === 'great' ? 9 :
-    normalizedMood === 'good' ? 7 :
-    normalizedMood === 'okay' ? 5 :
-    normalizedMood === 'low' ? 3 : 5
-
-  const energyImpact = (Number(energy) - 5) * 0.35
-  const stressImpact = (5 - Number(stress)) * 0.45
-
-  const score = Math.max(1, Math.min(10, Math.round(moodBase + energyImpact + stressImpact)))
-  return score
-}
+import { apiFetch } from '../lib/api'
+import { calculateCheckinScore } from '../lib/checkinInsights'
 
 function getResultContent({ mood, energy, stress }) {
   const normalizedMood = (mood || '').toLowerCase()
-  const score = getMoodScore(mood, energy, stress)
+  const score = calculateCheckinScore({ mood, energy, stress })
 
   if (normalizedMood === 'low' || stress >= 8) {
     return {
       score,
       emoji: '💙',
-      tone: 'under-pressure',
       accent: '#e05c5c',
       softBg: '#fff4f2',
       border: '1px solid rgba(224,92,92,0.18)',
@@ -52,7 +38,6 @@ function getResultContent({ mood, energy, stress }) {
     return {
       score,
       emoji: '🌤️',
-      tone: 'balanced',
       accent: '#f5a623',
       softBg: '#fff9ec',
       border: '1px solid rgba(245,166,35,0.18)',
@@ -79,7 +64,6 @@ function getResultContent({ mood, energy, stress }) {
     return {
       score,
       emoji: '🌱',
-      tone: 'good',
       accent: '#4caf87',
       softBg: '#f4fbf7',
       border: '1px solid rgba(76,175,135,0.18)',
@@ -106,7 +90,6 @@ function getResultContent({ mood, energy, stress }) {
     return {
       score,
       emoji: '✨',
-      tone: 'great',
       accent: '#5b8dee',
       softBg: '#eef4ff',
       border: '1px solid rgba(91,141,238,0.18)',
@@ -132,7 +115,6 @@ function getResultContent({ mood, energy, stress }) {
   return {
     score,
     emoji: '🌱',
-    tone: 'default',
     accent: '#5b8dee',
     softBg: '#eef4ff',
     border: '1px solid rgba(91,141,238,0.18)',
@@ -148,26 +130,39 @@ function getTrendBars(score, energy, stress) {
   const e = Number(energy) || 5
   const s = Number(stress) || 5
 
-  const values = [
+  return [
     Math.max(28, Math.min(96, base * 8)),
     Math.max(28, Math.min(96, (base - 1 + e * 0.3) * 8)),
     Math.max(28, Math.min(96, (base - 2 + (10 - s) * 0.4) * 8)),
     Math.max(28, Math.min(96, (base - 1 + e * 0.25 - s * 0.1) * 8)),
     Math.max(28, Math.min(96, (base + 0.5) * 8)),
   ]
-
-  return values
 }
 
 export default function Results() {
   const navigate = useNavigate()
   const location = useLocation()
+  const [savedCheckin, setSavedCheckin] = useState(location.state?.savedCheckin || null)
 
-  const state = location.state || {}
-  const mood = state.mood || ''
-  const energy = Number(state.energy || 0)
-  const stress = Number(state.stress || 0)
-  const notes = state.notes || ''
+  useEffect(() => {
+    if (savedCheckin) return
+
+    apiFetch('/checkins')
+      .then((data) => {
+        if (Array.isArray(data) && data.length) {
+          const latest = [...data].sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          )[0]
+          setSavedCheckin(latest)
+        }
+      })
+      .catch(() => {})
+  }, [savedCheckin])
+
+  const mood = savedCheckin?.mood || ''
+  const energy = Number(savedCheckin?.energy || 0)
+  const stress = Number(savedCheckin?.stress || 0)
+  const notes = savedCheckin?.notes || ''
 
   const result = getResultContent({ mood, energy, stress })
   const trendBars = getTrendBars(result.score, energy, stress)
