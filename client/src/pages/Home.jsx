@@ -62,8 +62,8 @@ export default function Home() {
       <div className="screen">
         <div
           style={{
-            paddingTop: 20,
-            marginBottom: 24,
+            paddingTop: 18,
+            marginBottom: 22,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'flex-start',
@@ -71,18 +71,33 @@ export default function Home() {
           }}
         >
           <div>
-            <p style={{ fontSize: 15, color: 'var(--color-text-secondary)', marginBottom: 4 }}>
+            <p
+              style={{
+                fontSize: 16,
+                color: 'var(--color-text-secondary)',
+                marginBottom: 8,
+                fontWeight: 600,
+              }}
+            >
               Hi, {user?.name || 'there'} 👋
             </p>
-            <h1 style={{ fontSize: 22, fontWeight: 700 }}>
-              How are you feeling today?
+            <h1>
+              How are you feeling
+              <br />
+              today?
             </h1>
           </div>
 
           <button
             className="btn btn-ghost"
             onClick={handleLogout}
-            style={{ width: 'auto', padding: '10px 14px', flexShrink: 0 }}
+            style={{
+              width: 'auto',
+              padding: '12px 16px',
+              flexShrink: 0,
+              borderRadius: 18,
+              fontWeight: 700,
+            }}
           >
             Logout
           </button>
@@ -92,13 +107,14 @@ export default function Home() {
           <div
             className="card"
             style={{
-              background: '#fef9ee',
-              border: '1px solid #f5a62330',
-              marginBottom: 20,
+              background: '#fff8eb',
+              border: '1px solid rgba(245,166,35,0.18)',
+              marginBottom: 18,
+              boxShadow: '0 14px 28px rgba(245,166,35,0.10)',
             }}
           >
-            <p style={{ fontWeight: 600, color: 'var(--color-text)', marginBottom: 6 }}>
-              I noticed you’ve been feeling low lately.
+            <p style={{ fontWeight: 700, color: 'var(--color-text)', marginBottom: 6 }}>
+              I noticed you&apos;ve been feeling low lately.
             </p>
             <p style={{ marginBottom: 12 }}>
               Want to talk for a moment with the support assistant?
@@ -116,7 +132,7 @@ export default function Home() {
           </div>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+        <div className="quick-actions" style={{ marginBottom: 18 }}>
           <button className="btn btn-primary" onClick={() => navigate('/checkin')}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <circle cx="12" cy="12" r="10" />
@@ -134,39 +150,43 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="card" style={{ background: 'var(--color-primary-light)', border: 'none', marginBottom: 24 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <p style={{ fontWeight: 600, color: 'var(--color-primary)', fontSize: 14 }}>
-              This week&apos;s mood
-            </p>
-            <span style={{ fontSize: 12, color: 'var(--color-primary)' }}>5 check-ins</span>
+        <div className="card hero-card" style={{ marginBottom: 22 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 12,
+            }}
+          >
+            <p style={{ fontWeight: 700, fontSize: 15 }}>This week&apos;s mood</p>
+            <span style={{ fontSize: 13, fontWeight: 600 }}>5 check-ins</span>
           </div>
 
-          <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 40 }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', height: 54 }}>
             {[60, 75, 55, 85, 70].map((h, i) => (
               <div
                 key={i}
                 style={{
                   flex: 1,
                   height: `${h}%`,
-                  background: 'var(--color-primary)',
-                  borderRadius: '4px 4px 0 0',
-                  opacity: i === 4 ? 1 : 0.5,
+                  background: i === 4 ? '#ffffff' : 'rgba(255,255,255,0.68)',
+                  borderRadius: '8px 8px 0 0',
                 }}
               />
             ))}
           </div>
 
-          <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
             {['M', 'T', 'W', 'T', 'F'].map((d, i) => (
               <span
                 key={i}
                 style={{
                   flex: 1,
                   textAlign: 'center',
-                  fontSize: 10,
-                  color: 'var(--color-primary)',
-                  fontWeight: i === 4 ? 700 : 400,
+                  fontSize: 11,
+                  color: 'rgba(255,255,255,0.95)',
+                  fontWeight: i === 4 ? 800 : 600,
                 }}
               >
                 {d}
@@ -175,37 +195,46 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <p className="section-title" style={{ marginBottom: 0 }}>
-            Recommended Articles
-          </p>
-
-          <button
-            onClick={() => navigate('/articles')}
+        <div className="soft-section" style={{ marginBottom: 22 }}>
+          <div
             style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--color-primary)',
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 12,
             }}
           >
-            View all
-          </button>
-        </div>
+            <p className="section-title" style={{ marginBottom: 0 }}>
+              Recommended Articles
+            </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {HOME_ARTICLES.map((a, i) => (
-            <ArticleCard
-              key={a.id}
-              id={a.id}
-              title={a.title}
-              category={a.category}
-              readTime={a.readTime}
-              index={i}
-            />
-          ))}
+            <button
+              onClick={() => navigate('/articles')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--color-primary)',
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              View all
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {HOME_ARTICLES.map((a, i) => (
+              <ArticleCard
+                key={a.id}
+                id={a.id}
+                title={a.title}
+                category={a.category}
+                readTime={a.readTime}
+                index={i}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

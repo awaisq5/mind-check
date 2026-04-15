@@ -4,7 +4,6 @@ import authRoutes from './routes/auth.js'
 import articleRoutes from './routes/articles.js'
 import checkinRoutes from './routes/checkins.js'
 import resourceRoutes from './routes/resources.js'
-import chatRoutes from './routes/chat.js'
 
 const app = express()
 
@@ -19,7 +18,6 @@ app.use('/api/auth', authRoutes)
 app.use('/api/articles', articleRoutes)
 app.use('/api/checkins', checkinRoutes)
 app.use('/api/resources', resourceRoutes)
-app.use('/api/chat', chatRoutes)
 
 app.use((err, req, res, next) => {
   console.error(err)

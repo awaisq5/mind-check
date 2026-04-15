@@ -1,25 +1,24 @@
 import express from 'express'
-import { generateChatResponse } from '../services/chatbotService.js'
 
 const router = express.Router()
 
+router.get('/status', async (req, res) => {
+  res.json({
+    shouldTriggerChatbot: false,
+    supportLevel: 'normal',
+    message: 'Chatbot is disabled in this environment.',
+  })
+})
+
 router.post('/', async (req, res) => {
-  try {
-    const { message } = req.body
-
-    if (!process.env.OPENAI_API_KEY) {
-      return res.json({
-        reply: "Chatbot is disabled in this environment.",
-      })
-    }
-    
-    if (!process.env.OPENAI_API_KEY || process.env.ENABLE_CHATBOT !== 'true') {
-
-    const result = await generateChatResponse(message)
-    res.json(result)
-  } catch (err) {
-    res.status(500).json({ error: 'Chat failed' })
-  }
+  res.json({
+    reply: 'Chatbot is currently disabled in this environment.',
+    supportStatus: {
+      shouldTriggerChatbot: false,
+      supportLevel: 'normal',
+      message: 'Chatbot is disabled in this environment.',
+    },
+  })
 })
 
 export default router

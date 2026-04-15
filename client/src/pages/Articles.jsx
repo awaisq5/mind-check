@@ -109,20 +109,29 @@ export default function Articles() {
   return (
     <>
       <div className="screen">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 0 20px' }}>
+        <div
+          style={{
+            paddingTop: 18,
+            marginBottom: 20,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
           <button
             onClick={() => navigate(-1)}
+            className="icon-button"
             style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 4,
-              borderRadius: 8,
+              width: 36,
+              height: 36,
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.72)',
+              border: '1px solid rgba(15,23,42,0.06)',
             }}
           >
             <svg
-              width="22"
-              height="22"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="var(--color-text)"
@@ -131,12 +140,27 @@ export default function Articles() {
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-          <h2>Articles</h2>
+          <div>
+            <h2>Articles</h2>
+            <p style={{ marginTop: 2 }}>Helpful reads for daily wellbeing.</p>
+          </div>
         </div>
 
-        <p style={{ marginBottom: 20, lineHeight: 1.7 }}>
-          Explore helpful articles to improve your mental wellbeing and daily habits.
-        </p>
+        <div
+          className="card"
+          style={{
+            marginBottom: 18,
+            background: 'linear-gradient(135deg, #f5f8ff 0%, #edf4ff 100%)',
+            border: '1px solid rgba(91,141,238,0.10)',
+          }}
+        >
+          <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)', marginBottom: 4 }}>
+            Explore and learn
+          </p>
+          <p>
+            Browse practical articles on stress, sleep, habits, and mindfulness.
+          </p>
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {ARTICLES.map((article, i) => (
