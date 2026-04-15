@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BottomNav from '../components/BottomNav'
 import ArticleCard from '../components/ArticleCard'
@@ -24,6 +24,15 @@ export default function Home() {
   const navigate = useNavigate()
   const [showChatPrompt, setShowChatPrompt] = useState(false)
   const [showChat, setShowChat] = useState(false)
+
+  const user = useMemo(() => {
+    try {
+      const raw = localStorage.getItem('user')
+      return raw ? JSON.parse(raw) : null
+    } catch {
+      return null
+    }
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -61,12 +70,14 @@ export default function Home() {
             gap: 16,
           }}
         >
-        <div>
-          <p style={{ fontSize: 15, color: 'var(--color-text-secondary)', marginBottom: 4 }}>Hi, {user?.name || 'there'} 👋</p>
-          <h1 style={{ fontSize: 22, fontWeight: 700 }}>
-          How are you feeling today?
-          </h1>
-        </div>
+          <div>
+            <p style={{ fontSize: 15, color: 'var(--color-text-secondary)', marginBottom: 4 }}>
+              Hi, {user?.name || 'there'} 👋
+            </p>
+            <h1 style={{ fontSize: 22, fontWeight: 700 }}>
+              How are you feeling today?
+            </h1>
+          </div>
 
           <button
             className="btn btn-ghost"
