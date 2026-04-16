@@ -92,10 +92,10 @@ export default function Home() {
           <div>
             <p
               style={{
-                fontSize: 16,
+                fontSize: 18,
                 color: 'var(--color-text-secondary)',
                 marginBottom: 8,
-                fontWeight: 600,
+                fontWeight: 800,
               }}
             >
               Hi, {user?.name || 'there'} 👋

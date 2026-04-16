@@ -1,10 +1,10 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --color-bg: #eef3ff;
+   --color-bg: #eef3ff;
   --color-surface: rgba(255, 255, 255, 0.88);
   --color-surface-strong: #ffffff;
-  --color-primary: #5b8dee;
+  --color-primary: #000000;
   --color-primary-light: #eef4ff;
   --color-primary-dark: #3a6bcc;
   --color-primary-soft: #dfe9ff;
@@ -12,9 +12,9 @@
   --color-success-light: #edf7f3;
   --color-warning: #f5a623;
   --color-danger: #e05c5c;
-  --color-text: #1a1d23;
-  --color-text-secondary: #667085;
-  --color-text-muted: #98a2b3;
+  --color-text: #000000;
+  --color-text-secondary: #000000;
+  --color-text-muted: #6a6a6a;
   --color-border: rgba(15, 23, 42, 0.08);
   --color-border-focus: #5b8dee;
 
@@ -42,7 +42,7 @@ body {
   background:
     radial-gradient(circle at top left, rgba(126, 167, 255, 0.28), transparent 30%),
     radial-gradient(circle at top right, rgba(202, 220, 255, 0.48), transparent 28%),
-    linear-gradient(180deg, #f5f8ff 0%, #edf2ff 100%);
+    linear-gradient(180deg, #bfe9e5 0%, #eaf7f6 100%);
 }
 
 #root {
@@ -57,7 +57,7 @@ body {
   width: 390px;
   height: 844px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.90) 100%);
+    linear-gradient(180deg, rgb(0, 145, 249) 50%, rgba(255, 255, 255, 0.778) 100%);
   border-radius: 40px;
   overflow: hidden;
   position: relative;
@@ -177,31 +177,37 @@ a { text-decoration: none; color: inherit; }
 .btn:active { transform: scale(0.985); }
 
 .btn-primary {
-  background: linear-gradient(135deg, #5b8dee 0%, #7aa9ff 100%);
-  color: #fff;
-  box-shadow: 0 14px 28px rgba(91,141,238,0.28);
+  background: linear-gradient(180deg, #000000 100%);
+  color: #ffffff;
+  box-shadow: 0 14px 28px rgba(19, 19, 20, 0.32);
 }
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 18px 34px rgba(91,141,238,0.32);
+  box-shadow: 0 18px 34px rgba(19, 19, 20, 0.32);
 }
 
 .btn-secondary {
-  background: linear-gradient(180deg, #f7faff 0%, #edf4ff 100%);
-  color: var(--color-primary);
-  border: 1px solid rgba(91,141,238,0.14);
+  background: linear-gradient(180deg, #ffffff 70%);
+  color: #000000;
+  box-shadow: 0 14px 28px rgba(19, 19, 20, 0.32);
+  border: 1px solid rgba(2, 2, 2, 0.14);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(19, 19, 20, 0.32);
 }
 
 .btn-ghost {
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
   color: var(--color-text-secondary);
   border: 1.5px solid var(--color-border);
-  backdrop-filter: blur(6px);
 }
 
 .card {
-  background: rgba(255,255,255,0.84);
-  border: 1px solid rgba(255,255,255,0.52);
+  background: rgba(255, 255, 255, 0.813);
+  border: 1px solid rgba(79, 79, 79, 0.568);
   border-radius: var(--radius-lg);
   padding: 18px;
   box-shadow: var(--shadow-card);
@@ -228,7 +234,7 @@ select {
   font-size: 15px;
   font-family: var(--font);
   color: var(--color-text);
-  background: rgba(255,255,255,0.92);
+  background: rgb(255, 255, 255);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
   resize: none;
@@ -248,15 +254,15 @@ input[type="range"] { width: 100%; height: 6px; accent-color: var(--color-primar
   font-size: 13px;
   font-weight: 600;
   border: 1.5px solid var(--color-border);
-  background: rgba(255,255,255,0.86);
+  background: rgb(255, 255, 255);
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 .chip.active {
-  background: var(--color-primary-light);
+  background: var(--color-text-muted);
   color: var(--color-primary);
-  border-color: rgba(91,141,238,0.24);
+  border-color: rgb(0, 0, 0);
   box-shadow: 0 6px 16px rgba(91,141,238,0.12);
 }
 
@@ -265,7 +271,7 @@ input[type="range"] { width: 100%; height: 6px; accent-color: var(--color-primar
   border-top: 1px solid rgba(15, 23, 42, 0.06);
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.88);
+  background: rgb(255, 255, 255);
   flex-shrink: 0;
   padding-bottom: 8px;
   backdrop-filter: blur(10px);
@@ -423,17 +429,17 @@ input[type="range"] { width: 100%; height: 6px; accent-color: var(--color-primar
 .mt-4 { margin-top: 4px; }
 .mt-8 { margin-top: 8px; }
 
-/* Home specific helpers */
+/* Mood graph at home page */
 .hero-card {
-  background: linear-gradient(135deg, #5b8dee 0%, #7aa9ff 100%);
+  background: linear-gradient(180deg, #050505 0%, #040404cc 100%);
   border: none;
-  color: #fff;
-  box-shadow: 0 20px 42px rgba(91,141,238,0.26);
+  color: #ffffff;
+  box-shadow: 0 20px 42px rgba(3, 3, 3, 0.255);
 }
 
 .hero-card p,
 .hero-card span {
-  color: rgba(255,255,255,0.94);
+  color: rgb(255, 255, 255);
 }
 
 .quick-actions {
@@ -530,5 +536,5 @@ input[type="range"] { width: 100%; height: 6px; accent-color: var(--color-primar
 
 .trend-label-date {
   font-size: 10px;
-  color: var(--color-text-muted);
+  color: var(--color-text);
 }

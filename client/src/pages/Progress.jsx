@@ -145,12 +145,12 @@ export default function Progress() {
           </div>
 
           <div className="result-metric-card">
-            <p className="result-metric-label">Energy</p>
+            <p className="result-metric-label">Energy (Latest)</p>
             <p className="result-metric-value">{stats.latestEnergy}</p>
           </div>
 
           <div className="result-metric-card">
-            <p className="result-metric-label">Stress</p>
+            <p className="result-metric-label">Stress (Latest)</p>
             <p className="result-metric-value">{stats.latestStress}</p>
           </div>
         </div>
