@@ -191,8 +191,7 @@ export default function Home() {
                 style={{
                   flex: 1,
                   height: `${Math.max(26, item.score * 10)}%`,
-                  background: i === arr.length - 1 ? '#ffffff' : 'rgba(255,255,255,0.68)',
-                  borderRadius: '8px 8px 0 0',
+                  background: i === arr.length - 1 ? '#000000ff' : 'rgba(0, 0, 0, 0.53)',
                 }}
               />
             ))}
@@ -206,7 +205,7 @@ export default function Home() {
                   flex: 1,
                   textAlign: 'center',
                   fontSize: 11,
-                  color: 'rgba(255,255,255,0.95)',
+                  color: 'rgba(0, 0, 0, 1)',
                   fontWeight: i === (trendData.length || 5) - 1 ? 800 : 600,
                 }}
               >

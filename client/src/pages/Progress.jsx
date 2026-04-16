@@ -140,7 +140,7 @@ export default function Progress() {
 
         <div className="result-metrics-row" style={{ marginBottom: 18 }}>
           <div className="result-metric-card">
-            <p className="result-metric-label">Avg Score</p>
+            <p className="result-metric-label">Avgerage Score</p>
             <p className="result-metric-value">{stats.averageMoodScore}</p>
           </div>
 
