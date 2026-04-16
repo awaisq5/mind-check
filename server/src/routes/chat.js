@@ -1,8 +1,7 @@
 import express from 'express'
+import { getSupportiveReply } from '../services/chatbotService.js'
 import CheckIn from '../models/CheckIn.js'
 import { requireAuth } from '../middleware/auth.js'
-import { buildSupportStatus } from '../utils/moodTriggers.js'
-import { getSupportiveReply } from '../services/chatbotService.js'
 
 const router = express.Router()
 
@@ -10,54 +9,52 @@ router.use(requireAuth)
 
 router.get('/status', async (req, res) => {
   try {
-    const checkins = await CheckIn.find({ userId: req.user.userId })
-      .sort({ createdAt: 1 })
-      .lean()
+    if (process.env.ENABLE_CHATBOT !== 'true') {
+      return res.json({
+        shouldTriggerChatbot: false,
+        supportLevel: 'normal',
+        chatbotEnabled: false,
+      })
+    }
 
-    const status = buildSupportStatus(checkins)
+    const recentCheckins = await CheckIn.find({ userId: req.user.userId })
+      .sort({ createdAt: -1 })
+      .limit(5)
 
-    res.json(status)
+    const lowCount = recentCheckins.filter((item) => {
+      const mood = String(item.mood || '').toLowerCase()
+      return mood === 'low' || Number(item.stress) >= 8
+    }).length
+
+    const shouldTriggerChatbot = lowCount >= Number(process.env.LOW_MOOD_THRESHOLD_COUNT || 3)
+
+    res.json({
+      shouldTriggerChatbot,
+      supportLevel: shouldTriggerChatbot ? 'elevated' : 'normal',
+      chatbotEnabled: true,
+    })
   } catch (error) {
     console.error('Chat status error:', error)
-    res.status(500).json({ message: 'Failed to get chatbot status.' })
+    res.json({
+      shouldTriggerChatbot: false,
+      supportLevel: 'normal',
+      chatbotEnabled: process.env.ENABLE_CHATBOT === 'true',
+    })
   }
 })
 
 router.post('/', async (req, res) => {
   try {
-    const { messages = [] } = req.body
+    const { messages = [], escalate = false } = req.body
 
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return res.status(400).json({ message: 'Messages are required.' })
-    }
+    const reply = await getSupportiveReply({ messages, escalate })
 
-    const checkins = await CheckIn.find({ userId: req.user.userId })
-      .sort({ createdAt: 1 })
-      .lean()
-
-    const status = buildSupportStatus(checkins)
-
-    const sanitizedMessages = messages
-      .filter(
-        (message) =>
-          message &&
-          typeof message.role === 'string' &&
-          typeof message.content === 'string'
-      )
-      .slice(-12)
-
-    const reply = await getSupportiveReply({
-      messages: sanitizedMessages,
-      escalate: status.shouldTriggerChatbot,
-    })
-
-    res.json({
-      reply,
-      supportStatus: status,
-    })
+    res.json({ reply })
   } catch (error) {
-    console.error('Chat reply error:', error)
-    res.status(500).json({ message: 'Failed to generate chatbot reply.' })
+    console.error('Chat route error:', error)
+    res.status(500).json({
+      message: 'Failed to generate chatbot reply.',
+    })
   }
 })
 

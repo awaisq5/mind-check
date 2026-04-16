@@ -13,20 +13,29 @@ export default function ArticleDetail() {
     return (
       <>
         <div className="screen">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 0 20px' }}>
+          <div
+            style={{
+              paddingTop: 18,
+              marginBottom: 20,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
             <button
               onClick={() => navigate('/articles')}
+              className="icon-button"
               style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 4,
-                borderRadius: 8,
+                width: 36,
+                height: 36,
+                borderRadius: 12,
+                background: 'rgba(255,255,255,0.72)',
+                border: '1px solid rgba(15,23,42,0.06)',
               }}
             >
               <svg
-                width="22"
-                height="22"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="var(--color-text)"
@@ -38,9 +47,9 @@ export default function ArticleDetail() {
             <h2>Article Not Found</h2>
           </div>
 
-          <p style={{ lineHeight: 1.7 }}>
-            The article you are looking for could not be found.
-          </p>
+          <div className="card">
+            <p>The article you are looking for could not be found.</p>
+          </div>
         </div>
 
         <BottomNav />
@@ -51,20 +60,29 @@ export default function ArticleDetail() {
   return (
     <>
       <div className="screen">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 0 20px' }}>
+        <div
+          style={{
+            paddingTop: 18,
+            marginBottom: 20,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
           <button
             onClick={() => navigate('/articles')}
+            className="icon-button"
             style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 4,
-              borderRadius: 8,
+              width: 36,
+              height: 36,
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.72)',
+              border: '1px solid rgba(15,23,42,0.06)',
             }}
           >
             <svg
-              width="22"
-              height="22"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="var(--color-text)"
@@ -76,47 +94,60 @@ export default function ArticleDetail() {
           <h2>Article</h2>
         </div>
 
-        <div className="card">
+        <div
+          className="card"
+          style={{
+            marginBottom: 18,
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.86) 100%)',
+          }}
+        >
           <p
             style={{
-              fontSize: 22,
-              fontWeight: 700,
+              fontSize: 28,
+              fontWeight: 800,
               color: 'var(--color-text)',
-              marginBottom: 12,
-              lineHeight: 1.4,
+              marginBottom: 14,
+              lineHeight: 1.25,
+              letterSpacing: '-0.03em',
             }}
           >
             {article.title}
           </p>
 
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 18, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20, flexWrap: 'wrap' }}>
             <span
               style={{
                 fontSize: 12,
-                fontWeight: 600,
+                fontWeight: 700,
                 color: 'var(--color-primary)',
                 background: 'var(--color-primary-light)',
-                padding: '4px 10px',
-                borderRadius: 20,
+                padding: '5px 10px',
+                borderRadius: 999,
               }}
             >
               {article.category}
             </span>
 
-            <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>
+            <span style={{ fontSize: 12, color: 'var(--color-text-muted)', fontWeight: 600 }}>
               {article.readTime} min read
             </span>
           </div>
 
           <div style={{ whiteSpace: 'pre-line', marginBottom: 20 }}>
-            <p style={{ lineHeight: 1.9 }}>{article.content}</p>
+            <p style={{ lineHeight: 1.95, fontSize: 15 }}>{article.content}</p>
           </div>
 
-          <div className="card" style={{ background: 'var(--color-primary-light)', border: 'none' }}>
+          <div
+            className="card"
+            style={{
+              background: 'linear-gradient(135deg, #f5f8ff 0%, #edf4ff 100%)',
+              border: '1px solid rgba(91,141,238,0.12)',
+            }}
+          >
             <p
               style={{
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 700,
                 color: 'var(--color-text)',
                 marginBottom: 8,
               }}
@@ -124,7 +155,7 @@ export default function ArticleDetail() {
               Want to explore more?
             </p>
 
-            <p style={{ marginBottom: 12, lineHeight: 1.7 }}>
+            <p style={{ marginBottom: 12 }}>
               Read the full article from an external source for more guidance and detail.
             </p>
 
