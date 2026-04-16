@@ -124,32 +124,76 @@ export default function Home() {
 
         {showChatPrompt && (
           <div
-            className="card"
+          className="card"
+          style={{
+            background: 'linear-gradient(135deg, #fff8eb 0%, #fffdf7 100%)',
+            border: '1px solid rgba(245,166,35,0.18)',
+            marginBottom: 18,
+            boxShadow: '0 16px 30px rgba(245,166,35,0.10)',
+            overflow: 'hidden',
+          }}
+          >
+          <div
             style={{
-              background: '#fff8eb',
-              border: '1px solid rgba(245,166,35,0.18)',
-              marginBottom: 18,
-              boxShadow: '0 14px 28px rgba(245,166,35,0.10)',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 12,
+              marginBottom: 12,
             }}
           >
-            <p style={{ fontWeight: 700, color: 'var(--color-text)', marginBottom: 6 }}>
-              I noticed you&apos;ve been feeling low lately.
-            </p>
-            <p style={{ marginBottom: 12 }}>
-              Want to talk for a moment with the support assistant?
-            </p>
+          <div
+              style={{
+                width: 46,
+                height: 46,
+                borderRadius: 14,
+                background: 'rgba(245,166,35,0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 22,
+                flexShrink: 0,
+              }}
+          >
+              💬
+          </div>
 
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button className="btn btn-primary" onClick={() => setShowChat(true)}>
-                Open chat
-              </button>
-
-              <button className="btn btn-ghost" onClick={() => setShowChatPrompt(false)}>
-                Later
-              </button>
+          <div style={{ flex: 1 }}>
+          <p
+                style={{
+                  fontWeight: 700,
+                  color: 'var(--color-text)',
+                  marginBottom: 4,
+                  fontSize: 15,
+                }}
+          >
+            I noticed you&apos;ve been feeling low lately
+          </p>
+            <p>
+            Want to talk for a moment with the support assistant?
+            </p>
             </div>
           </div>
-        )}
+
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button
+              className="btn btn-primary chat-open-btn"
+              onClick={() => setShowChat(true)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+              </svg>
+              Open chat
+            </button>
+
+            <button
+              className="btn btn-ghost"
+              onClick={() => setShowChatPrompt(false)}
+            >
+              Later
+            </button>
+            </div>
+            </div>
+          )}
 
         <div className="quick-actions" style={{ marginBottom: 18 }}>
           <button className="btn btn-primary" onClick={() => navigate('/checkin')}>
@@ -266,7 +310,17 @@ export default function Home() {
         </div>
       </div>
 
-      <ChatbotPanel open={showChat} onClose={() => setShowChat(false)} />
+      <button
+        className="chat-fab"
+        onClick={() => setShowChat(true)}
+        aria-label="Open support chat"
+        title="Open support chat"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+          <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+        </svg>
+      </button>
+
       <BottomNav />
     </>
   )
