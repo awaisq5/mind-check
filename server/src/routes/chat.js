@@ -3,6 +3,23 @@ import { getSupportiveReply } from '../services/chatbotService.js'
 import CheckIn from '../models/CheckIn.js'
 import { requireAuth } from '../middleware/auth.js'
 
+function getCheckinScore(checkin) {
+  const mood = String(checkin?.mood || '').toLowerCase()
+  const energy = Number(checkin?.energy || 5)
+  const stress = Number(checkin?.stress || 5)
+
+  const moodBase =
+    mood === 'great' ? 9 :
+    mood === 'good' ? 7 :
+    mood === 'okay' ? 5 :
+    mood === 'low' ? 3 : 5
+
+  const energyImpact = (energy - 5) * 0.35
+  const stressImpact = (5 - stress) * 0.45
+
+  return Math.max(1, Math.min(10, Math.round(moodBase + energyImpact + stressImpact)))
+}
+
 const router = express.Router()
 
 router.use(requireAuth)
@@ -17,22 +34,33 @@ router.get('/status', async (req, res) => {
       })
     }
 
-    const recentCheckins = await CheckIn.find({ userId: req.user.userId })
+    const latestCheckin = await CheckIn.findOne({ userId: req.user.userId })
       .sort({ createdAt: -1 })
-      .limit(5)
 
-    const lowCount = recentCheckins.filter((item) => {
-      const mood = String(item.mood || '').toLowerCase()
-      return mood === 'low' || Number(item.stress) >= 7
-    }).length
+    if (!latestCheckin) {
+      return res.json({
+        shouldTriggerChatbot: false,
+        supportLevel: 'normal',
+        chatbotEnabled: true,
+      })
+    }
+
+    const mood = String(latestCheckin.mood || '').toLowerCase()
+    const score = getCheckinScore(latestCheckin)
+    const stress = Number(latestCheckin.stress || 0)
 
     const shouldTriggerChatbot =
-      lowCount >= Number(process.env.LOW_MOOD_THRESHOLD_COUNT || 1)
+      mood === 'low' || stress >= 7 || score <= 4
+
+    const shouldHideChatbot =
+      mood === 'good' || mood === 'great' || score >= 7
 
     res.json({
-      shouldTriggerChatbot,
-      supportLevel: shouldTriggerChatbot ? 'elevated' : 'normal',
+      shouldTriggerChatbot: shouldHideChatbot ? false : shouldTriggerChatbot,
+      supportLevel: shouldHideChatbot ? 'normal' : shouldTriggerChatbot ? 'elevated' : 'normal',
       chatbotEnabled: true,
+      latestMood: mood,
+      latestScore: score,
     })
   } catch (error) {
     console.error('Chat status error:', error)
