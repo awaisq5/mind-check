@@ -21,13 +21,24 @@ async function request(path, options = {}) {
   })
 
   const text = await response.text()
-  const data = text ? JSON.parse(text) : {}
+ 
+  let data = {}
+
+  try {
+    data = text ? JSON.parse(text) : {}
+  } catch {
+    throw new Error(`Expected JSON but received: ${text.slice(0, 80)}`)
+  }
 
   if (!response.ok) {
     throw new Error(data.message || 'Something went wrong.')
   }
 
   return data
+}
+
+export async function apiFetch(path, options = {}) {
+  return request(path, options)
 }
 
 export const api = {

@@ -4,6 +4,7 @@ import BottomNav from '../components/BottomNav'
 import ArticleCard from '../components/ArticleCard'
 import ChatbotPanel from '../components/ChatbotPanel'
 import { apiFetch } from '../lib/api'
+
 import {
   buildInsight,
   buildTrendData,
