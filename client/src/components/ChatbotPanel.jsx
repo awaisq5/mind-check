@@ -54,7 +54,7 @@ export default function ChatbotPanel({ open, onClose }) {
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'center',
-        zIndex: 999,
+        zIndex: 10001,
       }}
     >
       <div

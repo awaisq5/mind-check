@@ -321,6 +321,7 @@ export default function Home() {
         </svg>
       </button>
 
+      <ChatbotPanel open={showChat} onClose={() => setShowChat(false)} />
       <BottomNav />
     </>
   )
