@@ -26,7 +26,8 @@ router.get('/status', async (req, res) => {
       return mood === 'low' || Number(item.stress) >= 8
     }).length
 
-    const shouldTriggerChatbot = lowCount >= Number(process.env.LOW_MOOD_THRESHOLD_COUNT || 3)
+    const shouldTriggerChatbot =
+      lowCount >= Number(process.env.LOW_MOOD_THRESHOLD_COUNT || 3)
 
     res.json({
       shouldTriggerChatbot,
@@ -46,15 +47,11 @@ router.get('/status', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { messages = [], escalate = false } = req.body
-
     const reply = await getSupportiveReply({ messages, escalate })
-
     res.json({ reply })
   } catch (error) {
     console.error('Chat route error:', error)
-    res.status(500).json({
-      message: 'Failed to generate chatbot reply.',
-    })
+    res.status(500).json({ message: 'Failed to generate chatbot reply.' })
   }
 })
 
