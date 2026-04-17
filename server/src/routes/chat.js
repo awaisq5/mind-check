@@ -23,11 +23,11 @@ router.get('/status', async (req, res) => {
 
     const lowCount = recentCheckins.filter((item) => {
       const mood = String(item.mood || '').toLowerCase()
-      return mood === 'low' || Number(item.stress) >= 8
+      return mood === 'low' || Number(item.stress) >= 7
     }).length
 
     const shouldTriggerChatbot =
-      lowCount >= Number(process.env.LOW_MOOD_THRESHOLD_COUNT || 3)
+      lowCount >= Number(process.env.LOW_MOOD_THRESHOLD_COUNT || 1)
 
     res.json({
       shouldTriggerChatbot,
