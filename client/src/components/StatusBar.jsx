@@ -1,4 +1,4 @@
-export default function StatusBar() {
+/* export default function StatusBar() {
   const time = new Date().toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
@@ -25,3 +25,4 @@ export default function StatusBar() {
     </div>
   )
 }
+*/
