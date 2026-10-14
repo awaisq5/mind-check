@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import mongoose from 'mongoose'
 import authRoutes from './routes/auth.js'
 import articleRoutes from './routes/articles.js'
 import checkinRoutes from './routes/checkins.js'
@@ -11,8 +12,16 @@ const app = express()
 app.use(cors({ origin: process.env.CLIENT_URL?.split(',') || '*' }))
 app.use(express.json())
 
-app.get('/api/health', (req, res) => {
-  res.json({ ok: true, message: 'Mind Check API is running.' })
+// Pinged by UptimeRobot every 5 minutes: keeps Render awake and touches
+// MongoDB Atlas so the free cluster never counts as inactive.
+app.get('/api/health', async (req, res) => {
+  try {
+    await mongoose.connection.db.admin().ping()
+    res.json({ ok: true, db: 'connected', message: 'Mind Check API is running.' })
+  } catch (error) {
+    console.error('Health check DB ping failed:', error.message)
+    res.status(503).json({ ok: false, db: 'unreachable' })
+  }
 })
 
 app.use('/api/auth', authRoutes)
