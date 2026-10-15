@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -13,9 +14,11 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "4.1",
     "mongoose": "^9.3.3",
-    "openai": "^6.34.0",
-    "uuid": "^10.0.0"
+    "openai": "^6.34.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4",
+    "vitest": "^2.1.9"
   }
 }

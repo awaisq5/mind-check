@@ -1,5 +1,5 @@
 import express from 'express'
-import { SUPPORT_OPTIONS } from '../utils/checkins.js'
+import { SUPPORT_OPTIONS } from '../utils/content.js'
 import { requireAuth } from '../middleware/auth.js'
 
 const router = express.Router()

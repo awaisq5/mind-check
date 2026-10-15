@@ -35,7 +35,9 @@ server/                Express API
   src/routes/          auth, checkins, articles, resources, chat
   src/models/          User, CheckIn (Mongoose)
   src/services/        chatbotService.js: prompt and OpenRouter call
+  src/utils/           chatTrigger.js: when the support chat appears; content.js: articles and support options
   src/middleware/      requireAuth: verifies the JWT
+  test/                API tests with the database mocked (Vitest, Supertest)
 ```
 
 ## API
@@ -69,6 +71,15 @@ cp .env.example .env      # VITE_API_BASE_URL=http://localhost:5000/api
 npm install
 npm run dev               # http://localhost:5173
 ```
+
+### Tests
+
+```bash
+cd server
+npm test
+```
+
+The API tests mock the database, so they need no MongoDB connection. They cover sign-up and login (passwords stored only as bcrypt hashes, the same answer for an unknown email and a wrong password), token checks on protected routes, check-ins scoped to the signed-in user, the health check, and when the support chat appears. GitHub Actions runs them and builds the frontend on every push.
 
 ### Environment variables
 

@@ -9,13 +9,11 @@ import ArticleDetail from './pages/ArticleDetail'
 import Progress from './pages/Progress'
 import SupportAlert from './pages/SupportAlert'
 import SupportOptions from './pages/SupportOptions'
-/*import StatusBar from './components/StatusBar' */
 
 export default function App() {
   return (
     <BrowserRouter>
       <div className="app-shell">
-        
         <Routes>
           <Route path="/" element={<Splash />} />
           <Route path="/login" element={<Login />} />

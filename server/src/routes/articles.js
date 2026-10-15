@@ -1,5 +1,5 @@
 import express from 'express'
-import { getArticles } from '../utils/checkins.js'
+import { getArticles } from '../utils/content.js'
 
 const router = express.Router()
 
