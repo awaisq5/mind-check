@@ -1,100 +1,43 @@
-import express from 'express'
 import bcrypt from 'bcryptjs'
+import express from 'express'
 import User from '../models/User.js'
-import { signToken } from '../utils/auth.js'
-import { requireAuth } from '../middleware/auth.js'
+import { publicUser, signToken } from '../utils/auth.js'
+import { CONSENT_VERSION, loginSchema, registerSchema, validate } from '../validation.js'
 
 const router = express.Router()
 
-router.post('/register', async (req, res) => {
+// Compared against when the email is unknown, so a login takes the same time either way.
+const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 10)
+
+router.post('/register', validate(registerSchema), async (req, res, next) => {
   try {
     const { name, email, password } = req.body
-
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email, and password are required.' })
-    }
-
-    const existing = await User.findOne({ email: email.toLowerCase() })
-    if (existing) {
+    if (await User.exists({ email })) {
       return res.status(409).json({ message: 'An account with that email already exists.' })
     }
-
-    const passwordHash = await bcrypt.hash(password, 10)
-
     const user = await User.create({
       name,
-      email: email.toLowerCase(),
-      passwordHash,
+      email,
+      passwordHash: await bcrypt.hash(password, 12),
+      consent: { version: CONSENT_VERSION, acceptedAt: new Date() },
     })
-
-    const token = signToken(user)
-
-    res.status(201).json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    })
+    res.status(201).json({ token: signToken(user), user: publicUser(user) })
   } catch (error) {
-    console.error('Register error:', error)
-    res.status(500).json({ message: 'Internal server error.' })
+    next(error)
   }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', validate(loginSchema), async (req, res, next) => {
   try {
     const { email, password } = req.body
-
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required.' })
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase() })
-    if (!user) {
+    const user = await User.findOne({ email })
+    const valid = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH)
+    if (!user || !valid) {
       return res.status(401).json({ message: 'Invalid email or password.' })
     }
-
-    const valid = await bcrypt.compare(password, user.passwordHash)
-    if (!valid) {
-      return res.status(401).json({ message: 'Invalid email or password.' })
-    }
-
-    const token = signToken(user)
-
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    })
+    res.json({ token: signToken(user), user: publicUser(user) })
   } catch (error) {
-    console.error('Login error:', error)
-    res.status(500).json({ message: 'Internal server error.' })
-  }
-})
-
-router.get('/me', requireAuth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.userId)
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' })
-    }
-
-    res.json({
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    })
-  } catch (error) {
-    console.error('Me error:', error)
-    res.status(500).json({ message: 'Internal server error.' })
+    next(error)
   }
 })
 

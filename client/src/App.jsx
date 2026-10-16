@@ -1,33 +1,62 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Splash from './pages/Splash'
-import Login from './pages/Login'
-import Home from './pages/Home'
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { AppLayout } from './components/Layout'
+import { Loading } from './components/ui'
+import { AuthProvider, useAuth } from './lib/auth'
+import Care from './pages/Care'
 import CheckIn from './pages/CheckIn'
-import Results from './pages/Results'
-import Articles from './pages/Articles'
-import ArticleDetail from './pages/ArticleDetail'
-import Progress from './pages/Progress'
-import SupportAlert from './pages/SupportAlert'
-import SupportOptions from './pages/SupportOptions'
+import Companion from './pages/Companion'
+import HelpNow from './pages/HelpNow'
+import Landing from './pages/Landing'
+import { Login, Register } from './pages/Auth'
+import Privacy from './pages/Privacy'
+import Questionnaire from './pages/Questionnaire'
+import Questionnaires from './pages/Questionnaires'
+import Report from './pages/Report'
+import SafetyPlan from './pages/SafetyPlan'
+import Settings from './pages/Settings'
+import Today from './pages/Today'
+import Trends from './pages/Trends'
+
+function RequireAuth() {
+  const { user, loading } = useAuth()
+  if (loading) return <Loading label="Opening Mind Check…" />
+  return user ? <Outlet /> : <Navigate to="/login" replace />
+}
+
+function PublicOnly({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <Loading />
+  return user ? <Navigate to="/today" replace /> : children
+}
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="app-shell">
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Splash />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/checkin" element={<CheckIn />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/articles" element={<Articles />} />
-          <Route path="/articles/:id" element={<ArticleDetail />} />
-          <Route path="/progress" element={<Progress />} />
-          <Route path="/support-alert" element={<SupportAlert />} />
-          <Route path="/support" element={<SupportOptions />} />
+          <Route path="/" element={<PublicOnly><Landing /></PublicOnly>} />
+          <Route path="/login" element={<PublicOnly><Login /></PublicOnly>} />
+          <Route path="/register" element={<PublicOnly><Register /></PublicOnly>} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/help" element={<HelpNow />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/report" element={<Report />} />
+            <Route element={<AppLayout />}>
+              <Route path="/today" element={<Today />} />
+              <Route path="/check-in" element={<CheckIn />} />
+              <Route path="/check-in/:date" element={<CheckIn />} />
+              <Route path="/trends" element={<Trends />} />
+              <Route path="/questionnaires" element={<Questionnaires />} />
+              <Route path="/questionnaires/:type" element={<Questionnaire />} />
+              <Route path="/care" element={<Care />} />
+              <Route path="/safety-plan" element={<SafetyPlan />} />
+              <Route path="/companion" element={<Companion />} />
+              <Route path="/settings" element={<Settings />} />
+            </Route>
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
